@@ -18,7 +18,6 @@ namespace TravelPlaces11.Controllers
             _lookupService = lookupService;
         }
 
-        // GET: /Place?searchName=...&placeTypeId=...
         public async Task<IActionResult> Index(string? searchName, int? placeTypeId)
         {
             var model = new PlacesIndexViewModel
@@ -32,7 +31,6 @@ namespace TravelPlaces11.Controllers
             return View(model);
         }
 
-        // GET: /Place/Details/5
         public async Task<IActionResult> Details(int id)
         {
             var place = await _placeService.GetDetailsAsync(id);
@@ -56,7 +54,6 @@ namespace TravelPlaces11.Controllers
             return View(model);
         }
 
-        // GET: /Place/Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -66,14 +63,12 @@ namespace TravelPlaces11.Controllers
             return View(model);
         }
 
-        // POST: /Place/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePlaceViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                // При грешка показваме формата отново, със съобщенията за грешки
                 await FillCreateLists(model);
                 return View(model);
             }
@@ -90,7 +85,6 @@ namespace TravelPlaces11.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: /Place/AddReview
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddReview([Bind(Prefix = "NewReview")] CreateReviewViewModel model)

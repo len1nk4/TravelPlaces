@@ -57,16 +57,13 @@ namespace TravelPLaces11.Data
                 entity.Property(e => e.Description)
                     .HasMaxLength(1000);
 
-                // Входната такса не може да е отрицателна – проверка и в базата
                 entity.ToTable(t => t.HasCheckConstraint("CK_TravelPlaces_Fee", "[Fee] >= 0"));
 
-                // One Area has many TravelPlaces
                 entity.HasOne(e => e.Area)
                     .WithMany(a => a.TravelPlaces)
                     .HasForeignKey(e => e.AreaId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // One PlaceType has many TravelPlaces
                 entity.HasOne(e => e.PlaceType)
                     .WithMany(t => t.TravelPlaces)
                     .HasForeignKey(e => e.PlaceTypeId)
@@ -98,16 +95,13 @@ namespace TravelPLaces11.Data
                 entity.Property(r => r.VisitDate)
                     .HasColumnType("date");
 
-                // Оценката е от 1 до 5
                 entity.ToTable(t => t.HasCheckConstraint("CK_Reviews_Rating", "[Rating] BETWEEN 1 AND 5"));
 
-                // One TravelPlace has many Reviews
                 entity.HasOne(r => r.TravelPlace)
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(r => r.TravelPlaceId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // One Visitor has many Reviews
                 entity.HasOne(r => r.Visitor)
                     .WithMany(v => v.Reviews)
                     .HasForeignKey(r => r.VisitorId)

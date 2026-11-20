@@ -28,7 +28,6 @@ namespace TravelPlaces11.ViewModels.Places
         [StringLength(1000, ErrorMessage = "Описанието може да е най-много {1} символа.")]
         public string? Description { get; set; }
 
-        // Опции за падащите менюта – не идват от формата, затова не се валидират
         [ValidateNever]
         public List<SelectListItem> Areas { get; set; } = new List<SelectListItem>();
 

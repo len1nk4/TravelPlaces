@@ -57,7 +57,6 @@ namespace TravelPLaces11.Data
 
         private static void SeedPlaces(TravelPlaces11DbContext db)
         {
-            // Добавяме демо обекти само ако базата е празна
             if (db.TravelPlaces.Any())
             {
                 return;

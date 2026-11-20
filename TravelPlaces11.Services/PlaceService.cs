@@ -19,14 +19,12 @@ namespace TravelPlaces11.Services
         {
             var query = _context.TravelPlaces.AsQueryable();
 
-            // Търсене по име
             if (!string.IsNullOrWhiteSpace(searchName))
             {
                 var term = searchName.Trim();
                 query = query.Where(p => p.Name.Contains(term));
             }
 
-            // Филтриране по вид
             if (placeTypeId.HasValue)
             {
                 query = query.Where(p => p.PlaceTypeId == placeTypeId.Value);
@@ -101,7 +99,6 @@ namespace TravelPlaces11.Services
 
             var email = dto.VisitorEmail.Trim();
 
-            // Ако посетителят вече съществува (по имейл), използваме него
             var visitor = await _context.Visitors.FirstOrDefaultAsync(v => v.Email == email);
 
             if (visitor == null)

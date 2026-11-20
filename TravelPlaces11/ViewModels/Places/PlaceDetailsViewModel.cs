@@ -6,7 +6,6 @@ namespace TravelPlaces11.ViewModels.Places
     {
         public PlaceDetailsDto Place { get; set; } = null!;
 
-        // Формата за нов отзив
         public CreateReviewViewModel NewReview { get; set; } = new CreateReviewViewModel();
     }
 }
