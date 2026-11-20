@@ -1,0 +1,81 @@
+@model PlacesIndexViewModel
+@{
+    ViewData["Title"] = "Места за посещение";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Места за посещение</h1>
+    <a asp-controller="Place" asp-action="Create" class="btn btn-primary">
+        Добави ново място
+    </a>
+</div>
+
+<form method="get" asp-controller="Place" asp-action="Index" class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input asp-for="SearchName" class="form-control" placeholder="Търси по име..." />
+    </div>
+    <div class="col-md-4">
+        <select asp-for="PlaceTypeId" asp-items="Model.PlaceTypes" class="form-select">
+            <option value="">Всички видове</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-outline-primary">Търси</button>
+        <a asp-controller="Place" asp-action="Index" class="btn btn-outline-secondary">Изчисти</a>
+    </div>
+</form>
+
+@if (!Model.Places.Any())
+{
+    if (Model.HasFilters)
+    {
+        <p>Няма места, които отговарят на търсенето.</p>
+    }
+    else
+    {
+        <p>Все още няма добавени места.</p>
+    }
+}
+else
+{
+    <p class="text-muted">Намерени места: @Model.Places.Count</p>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Име</th>
+                <th>Област</th>
+                <th>Вид</th>
+                <th>Такса</th>
+                <th>Оценка</th>
+                <th>Описание</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var place in Model.Places)
+            {
+                <tr>
+                    <td>@place.Name</td>
+                    <td>@place.AreaName</td>
+                    <td>@(place.PlaceTypeName ?? "—")</td>
+                    <td>@(place.Fee == 0 ? "Безплатно" : place.Fee.ToString("0.00") + " лв.")</td>
+                    <td>
+                        @if (place.AverageRating.HasValue)
+                        {
+                            <span>@place.AverageRating.Value.ToString("0.0") / 5 (@place.ReviewsCount)</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">няма</span>
+                        }
+                    </td>
+                    <td>@(place.Description ?? "—")</td>
+                    <td>
+                        <a asp-controller="Place" asp-action="Details" asp-route-id="@place.Id" class="btn btn-sm btn-outline-primary">Детайли</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
