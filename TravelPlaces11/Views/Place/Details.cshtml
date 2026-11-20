@@ -1,0 +1,100 @@
+@model PlaceDetailsViewModel
+@{
+    ViewData["Title"] = Model.Place.Name;
+}
+
+<a asp-controller="Place" asp-action="Index" class="btn btn-link px-0 mb-2">&larr; Към всички места</a>
+
+<h1>@Model.Place.Name</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Област</dt>
+    <dd class="col-sm-9">@Model.Place.AreaName</dd>
+
+    <dt class="col-sm-3">Вид</dt>
+    <dd class="col-sm-9">@(Model.Place.PlaceTypeName ?? "—")</dd>
+
+    <dt class="col-sm-3">Входна такса</dt>
+    <dd class="col-sm-9">@(Model.Place.Fee == 0 ? "Безплатно" : Model.Place.Fee.ToString("0.00") + " лв.")</dd>
+
+    <dt class="col-sm-3">Средна оценка</dt>
+    <dd class="col-sm-9">@(Model.Place.AverageRating.HasValue ? Model.Place.AverageRating.Value.ToString("0.0") + " / 5" : "няма оценки")</dd>
+
+    <dt class="col-sm-3">Описание</dt>
+    <dd class="col-sm-9">@(Model.Place.Description ?? "—")</dd>
+</dl>
+
+<h2 class="h4 mt-4">Отзиви (@Model.Place.Reviews.Count)</h2>
+
+@if (!Model.Place.Reviews.Any())
+{
+    <p class="text-muted">Все още няма отзиви.</p>
+}
+else
+{
+    <ul class="list-group mb-4">
+        @foreach (var review in Model.Place.Reviews)
+        {
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <strong>@review.VisitorName</strong>
+                    <span>@review.Rating / 5</span>
+                </div>
+                <small class="text-muted">Посещение: @review.VisitDate.ToString("dd.MM.yyyy")</small>
+                @if (!string.IsNullOrWhiteSpace(review.Comment))
+                {
+                    <p class="mb-0 mt-1">@review.Comment</p>
+                }
+            </li>
+        }
+    </ul>
+}
+
+<h2 class="h4 mt-4">Добави отзив</h2>
+
+<form asp-controller="Place" asp-action="AddReview" method="post" class="col-md-8 col-lg-6">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="NewReview.TravelPlaceId" />
+
+    <div class="mb-3">
+        <label asp-for="NewReview.VisitorName" class="form-label"></label>
+        <input asp-for="NewReview.VisitorName" class="form-control" />
+        <span asp-validation-for="NewReview.VisitorName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewReview.VisitorEmail" class="form-label"></label>
+        <input asp-for="NewReview.VisitorEmail" class="form-control" />
+        <span asp-validation-for="NewReview.VisitorEmail" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewReview.Rating" class="form-label"></label>
+        <select asp-for="NewReview.Rating" class="form-select">
+            <option value="5">5 – отлично</option>
+            <option value="4">4 – много добро</option>
+            <option value="3">3 – добро</option>
+            <option value="2">2 – слабо</option>
+            <option value="1">1 – лошо</option>
+        </select>
+        <span asp-validation-for="NewReview.Rating" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewReview.VisitDate" class="form-label"></label>
+        <input asp-for="NewReview.VisitDate" class="form-control" />
+        <span asp-validation-for="NewReview.VisitDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewReview.Comment" class="form-label"></label>
+        <textarea asp-for="NewReview.Comment" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="NewReview.Comment" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Изпрати отзив</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
